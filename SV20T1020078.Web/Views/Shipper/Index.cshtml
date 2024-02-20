@@ -1,0 +1,77 @@
+﻿@{
+    // Sử dụng layout khác
+    // Layout = "_Layout2";
+    // nếu ko có layout thì sử dụng layout mặc định
+    ViewBag.Title = "Quản lý người giao hàng";
+    // Layout = null; // Khong dùng đến layout
+}
+
+<div class="box box-primary">
+    <div class="box-body">
+
+        <!--Form nhập đầu vào tìm kiếm-->
+        <form id="formSearch" action="#">
+            <div class="input-group">
+                <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên người giao hàng cần tìm">
+
+                <div class="input-group-btn">
+                    <button class="btn btn-info" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                    <a href="~/Shipper/Create" class="btn btn-primary" style="margin-left:5px">
+                        <i class="fa fa-plus"></i> Bổ sung
+                    </a>
+                </div>
+            </div>
+        </form>
+
+        <!-- Hiển thị kết quả tìm kiếm -->
+        <div>
+            <p style="margin: 10px 0 10px 0">
+                Có <strong>100</strong> người giao hàng trong số <strong>100</strong> trang
+            </p>
+            <div class="table-responsive">
+                <table class=" table table-bordered table-hover table-striped">
+                    <!--Header-->
+                    <thead>
+                        <tr class="bg-primary">
+                            <th>Tên nhà người giao hàng </th>
+                            <th>Điện thoại</th>
+                            <th style="width:80px"></th>
+                        </tr>
+                    </thead>
+
+                    <!--Body-->
+                    <tbody>
+                        @for (int i = 1; i <= 10; i++)
+                        {
+                            <tr>
+                                <td>Đạt Võ</td>
+                                <td>0123456789</td>
+                                <td class="text-right">
+                                    <a href="~/Shipper/Edit/123" class="btn btn-xs btn-info">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <a href="~/Shipper/Delete/123" class="btn btn-xs btn-danger">
+                                        <i class="fa fa-remove"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>    
+                </table>
+
+            </div>
+            <div class="text-center">
+                <ul class="pagination">
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
