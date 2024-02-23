@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\20T1020078.DomainModels\SV20T1020078.DomainModels.csproj" />
+    <ProjectReference Include="..\SV20T1020078.DataLayers\SV20T1020078.DataLayers.csproj" />
+  </ItemGroup>
+
 </Project>

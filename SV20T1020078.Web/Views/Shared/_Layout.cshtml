@@ -35,6 +35,9 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <!-- Site wrapper -->
+    @{
+        await RenderSectionAsync("scripts", false);
+    }
     <div class="wrapper">
 
         @{
@@ -86,6 +89,7 @@
     <!-- date-range-picker -->
     <script src="~/themes/bower_components/moment/min/moment.min.js"></script>
     <script src="~/themes/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+
     <!-- bootstrap datepicker -->
     <script src="~/themes/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <!-- AdminLTE App -->
