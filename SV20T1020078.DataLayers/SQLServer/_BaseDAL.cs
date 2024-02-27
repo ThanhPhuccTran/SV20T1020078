@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SV20T1020078.DataLayers.SQLServer
 {
     //abstract là gì ??? 
-    public class _BaseDAL
+    public abstract class _BaseDAL
     {
         protected string _connectionString = "";
         /// <summary>

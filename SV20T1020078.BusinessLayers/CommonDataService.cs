@@ -1,5 +1,5 @@
-﻿using SV20T1020078.DataLayers;
-using SV20T1020078.DomainModels;
+﻿using SV20T1020078.DomainModels;
+using SV20T1020078.DataLayers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,7 @@ namespace SV20T1020078.BusinessLayers
     {
         private static readonly ICommonDAL<Province> provinceDB;
         private static readonly ICommonDAL<Customer> customerDB;
+        private static readonly ICommonDAL<Supplier> supplierDB;
         /// <summary>
         /// Ctor ( Câu hỏi static constructor hoạt động như thế nào ? cách viết ? )
         /// </summary>
@@ -24,6 +25,7 @@ namespace SV20T1020078.BusinessLayers
             string connectionString = Configuration.ConnectionString;
             provinceDB = new ProvinceDAL(connectionString);
             customerDB = new CustomerDAL(connectionString);
+            supplierDB = new SupplierDAL(connectionString);
         }
         /// <summary>
         /// Tìm kiếm và lấy danh sách
@@ -37,6 +39,19 @@ namespace SV20T1020078.BusinessLayers
         {
             rowCount = customerDB.Count(searchValue);
             return customerDB.List(page,pageSize, searchValue).ToList();
+        }
+        /// <summary>
+        /// Tìm kiếm và lấy danh sách Nhà Cung Cấp
+        /// </summary>
+        /// <param name="rowCount">Tham số đầu ra cho biết số dòng dữ liệu tìm được </param>
+        /// <param name="page">Trang cần hiển thị </param>
+        /// <param name="pageSize">Số dòng trên mỗi trang (0 nếu không phân trang ) </param>
+        /// <param name="searchValue">Gía trị tìm kiếm (rỗng nếu toàn bộ nhà cung cấp ) </param>
+        /// <returns></returns>
+        public static List<Supplier> ListOfSuppliers(out int rowCount,int page = 1 , int pageSize = 0 , string searchValue = "")
+        {
+            rowCount = supplierDB.Count(searchValue);
+            return supplierDB.List(page,pageSize,searchValue).ToList();
         }
         
     }

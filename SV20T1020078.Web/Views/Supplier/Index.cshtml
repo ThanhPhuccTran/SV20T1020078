@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<SV20T1020078.DomainModels.Supplier>
+@{
     // Sử dụng layout khác
     // Layout = "_Layout2";
     // nếu ko có layout thì sử dụng layout mặc định
@@ -10,7 +11,7 @@
     <div class="box-body">
 
         <!--Form nhập đầu vào tìm kiếm-->
-        <form id="formSearch" action="#">
+        <form id="formSearch" action="~/Supplier">
             <div class="input-group">
                 <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên nhà cung cấp cần tìm">
 
@@ -28,7 +29,7 @@
         <!-- Hiển thị kết quả tìm kiếm -->
         <div>
             <p style="margin: 10px 0 10px 0">
-                Có <strong>1,024</strong> nhà cung cấp trong số <strong>100</strong> trang
+                Có <strong>@ViewBag.RowCount</strong> nhà cung cấp trong số <strong>@ViewBag.PageCount</strong> trang
             </p>
             <div class="table-responsive">
                 <table class=" table table-bordered table-hover table-striped">
@@ -47,15 +48,15 @@
 
                     <!--Body-->
                     <tbody>
-                        @for (int i = 1; i <= 10; i++)
+                        @foreach (var item in Model)
                         {
                             <tr>
-                                <td>TNHH Vinamik</td>
-                                <td>Vinamik giao dịch</td>
-                                <td>0788291221</td>
-                                <td>vinamik@gmail.com</td>
-                                <td>219 Nguyễn Huệ</td>
-                                <td>Thừa Thiên Huế</td>
+                                <td>@item.SupplierName</td>
+                                <td>@item.ContactName</td>
+                                <td>@item.Phone</td>
+                                <td>@item.Email</td>
+                                <td>@item.Address</td>
+                                <td>@item.Provice</td>
                                 <td class="text-right">
                                     <a href="~/Supplier/Edit/123" class="btn btn-xs btn-info">
                                         <i class="fa fa-edit"></i>

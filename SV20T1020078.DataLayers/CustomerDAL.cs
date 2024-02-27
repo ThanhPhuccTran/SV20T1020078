@@ -28,6 +28,7 @@ namespace SV20T1020078.DataLayers
 
             if(!string.IsNullOrEmpty(searchValue))
                 searchValue = "%" + searchValue + "%"; // tìm kiếm dữ liệu đếm được 
+            // kết nối đến CSDL
             using (var connection = OpenConnection())
             {
                 //Ctr K + D
@@ -84,6 +85,7 @@ namespace SV20T1020078.DataLayers
                             where  (@pageSize = 0) 
                                    or (RowNumber between (@page - 1) * @pageSize + 1 and @page * @pageSize)
                             order by RowNumber";
+                //gán giá trị cho tham siis
                 var parameters = new
                 {
                     page = page,
