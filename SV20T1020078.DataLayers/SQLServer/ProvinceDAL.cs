@@ -1,5 +1,4 @@
 ﻿using SV20T1020078.DomainModels;
-using SV20T1020078.DataLayers.SQLServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 using Dapper;
 using System.Data;
 
-namespace SV20T1020078.DataLayers
+namespace SV20T1020078.DataLayers.SQLServer
 {
     public class ProvinceDAL : _BaseDAL, ICommonDAL<Province>
     {
@@ -52,7 +51,7 @@ namespace SV20T1020078.DataLayers
             using (var connection = OpenConnection())
             {
                 var sql = @"select * from Provinces";
-                list = connection.Query<Province>(sql:sql, commandType : CommandType.Text).ToList();
+                list = connection.Query<Province>(sql: sql, commandType: CommandType.Text).ToList();
                 connection.Close();
             }
             return list;
@@ -63,6 +62,6 @@ namespace SV20T1020078.DataLayers
             throw new NotImplementedException();
         }
 
-       
+
     }
 }

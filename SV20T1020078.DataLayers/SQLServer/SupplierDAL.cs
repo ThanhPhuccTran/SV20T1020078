@@ -1,6 +1,5 @@
 ﻿using SV20T1020078.DomainModels;
 using Dapper;
-using SV20T1020078.DataLayers.SQLServer;
 using SV20T1020078.DomainModels;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SV20T1020078.DataLayers
+namespace SV20T1020078.DataLayers.SQLServer
 {
     public class SupplierDAL : _BaseDAL, ICommonDAL<Supplier>
     {
@@ -24,10 +23,10 @@ namespace SV20T1020078.DataLayers
 
         public int Count(string searchValue = "")
         {
-           int count = 0;
-            if(!string.IsNullOrEmpty(searchValue))
+            int count = 0;
+            if (!string.IsNullOrEmpty(searchValue))
             {
-                searchValue = "%" + searchValue +"%";
+                searchValue = "%" + searchValue + "%";
             }
             //ketnoi KSDL
             using (var connection = OpenConnection())
@@ -38,7 +37,7 @@ namespace SV20T1020078.DataLayers
                 count = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
             }
-           return count;
+            return count;
         }
 
         public bool Delete(Supplier data)
@@ -84,8 +83,8 @@ namespace SV20T1020078.DataLayers
                             order by RowNumber";
                 var parameters = new
                 {
-                    page = page,
-                    pageSize = pageSize,
+                    page,
+                    pageSize,
                     searchValue = searchValue ?? ""
                 };
                 list = connection.Query<Supplier>(sql: sql, param: parameters, commandType: CommandType.Text).ToList();

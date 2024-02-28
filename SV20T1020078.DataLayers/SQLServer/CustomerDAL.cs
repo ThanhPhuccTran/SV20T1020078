@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Dapper;
 using System.Data;
 using SV20T1020078.DomainModels;
-using SV20T1020078.DataLayers.SQLServer;
 
-namespace SV20T1020078.DataLayers
+namespace SV20T1020078.DataLayers.SQLServer
 {
     public class CustomerDAL : _BaseDAL, ICommonDAL<Customer>
     {
@@ -35,12 +34,12 @@ namespace SV20T1020078.DataLayers
                     CustomerName = data.CustomerName ?? "",
                     ContactName = data.ContactName ?? "",
                     Province = data.Province ?? "",
-                    Address = data.Address ??"",
-                    Phone = data.Phone??"",
-                    Email = data.Email??"",
-                    IsLocked = data.IsLocked,
+                    Address = data.Address ?? "",
+                    Phone = data.Phone ?? "",
+                    Email = data.Email ?? "",
+                    data.IsLocked,
                 };
-                id = connection.ExecuteScalar<int>(sql : sql, param: parameters, commandType : CommandType.Text);
+                id = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
             }
             return id;
@@ -51,7 +50,7 @@ namespace SV20T1020078.DataLayers
             int count = 0;
 
 
-            if(!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue))
                 searchValue = "%" + searchValue + "%"; // tìm kiếm dữ liệu đếm được 
             // kết nối đến CSDL
             using (var connection = OpenConnection())
@@ -60,14 +59,14 @@ namespace SV20T1020078.DataLayers
                 var sql = @"select count(*) from Customers 
                             where (@searchValue = N'') or (CustomerName like @searchValue)";
                 var parameters = new { searchValue = searchValue ?? "" };
-                count = connection.ExecuteScalar<int>(sql: sql,param:parameters,commandType: CommandType.Text);
+                count = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
 
             }
             return count;
         }
 
-      
+
         public bool Delete(int id)
         {
             bool result = false;
@@ -79,7 +78,7 @@ namespace SV20T1020078.DataLayers
                     CustomerID = id
                 };
                 // thực thi câu lệnh
-                result = connection.Execute(sql : sql, param : parameters, commandType : CommandType.Text) > 0;
+                result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
                 connection.Close();
             }
             return result;
@@ -95,7 +94,7 @@ namespace SV20T1020078.DataLayers
                 {
                     CustomerId = id
                 };
-                data = connection.QueryFirstOrDefault<Customer>(sql: sql, param : parameters, commandType : CommandType.Text);
+                data = connection.QueryFirstOrDefault<Customer>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
             }
             return data;
@@ -112,7 +111,7 @@ namespace SV20T1020078.DataLayers
                                 select 0";
                 var parameters = new
                 {
-                   CustomerId = id
+                    CustomerId = id
                 };
                 result = connection.ExecuteScalar<bool>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
@@ -124,7 +123,7 @@ namespace SV20T1020078.DataLayers
         {
             List<Customer> list = new List<Customer>();
 
-            if(!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(searchValue))
             {
                 searchValue = "%" + searchValue + "%"; // tìm kiếm tương đối sql
 
@@ -146,13 +145,13 @@ namespace SV20T1020078.DataLayers
                 //gán giá trị cho tham siis
                 var parameters = new
                 {
-                    page = page,
-                    pageSize = pageSize,
+                    page,
+                    pageSize,
                     searchValue = searchValue ?? ""
-                }; 
-                list = connection.Query<Customer>(sql : sql,param : parameters ,commandType : CommandType.Text).ToList();
+                };
+                list = connection.Query<Customer>(sql: sql, param: parameters, commandType: CommandType.Text).ToList();
                 connection.Close();
-                    
+
             }
             return list;
         }
@@ -182,15 +181,15 @@ namespace SV20T1020078.DataLayers
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
-                    IsLocked = data.IsLocked,
+                    data.IsLocked,
                 };
                 result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
                 connection.Close();
-                    
+
             }
             return result;
         }
 
-      
+
     }
 }
