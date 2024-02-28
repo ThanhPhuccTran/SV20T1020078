@@ -46,6 +46,11 @@ namespace SV20T1020078.DataLayers
             throw new NotImplementedException();
         }
 
+        public bool Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Supplier? Get(int id)
         {
             throw new NotImplementedException();

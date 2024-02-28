@@ -49,7 +49,7 @@ namespace SV20T1020078.DataLayers
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        bool Delete(T data);
+        bool Delete(int id);
         /// <summary>
         /// Kiểm tra xem một bản ghi dữ liệu có mã id hiện đang có được sử dụng bởi các bảng khác hay không ? 
         /// (có dữ liệu hay không ) 

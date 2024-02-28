@@ -16,6 +16,7 @@ namespace SV20T1020078.BusinessLayers
     {
         private static readonly ICommonDAL<Province> provinceDB;
         private static readonly ICommonDAL<Customer> customerDB;
+
         private static readonly ICommonDAL<Supplier> supplierDB;
         /// <summary>
         /// Ctor ( Câu hỏi static constructor hoạt động như thế nào ? cách viết ? )
@@ -26,6 +27,10 @@ namespace SV20T1020078.BusinessLayers
             provinceDB = new ProvinceDAL(connectionString);
             customerDB = new CustomerDAL(connectionString);
             supplierDB = new SupplierDAL(connectionString);
+        }
+        public static List<Province> ListOfCustomers() 
+        {
+            return provinceDB.List().ToList();
         }
         /// <summary>
         /// Tìm kiếm và lấy danh sách
@@ -39,6 +44,56 @@ namespace SV20T1020078.BusinessLayers
         {
             rowCount = customerDB.Count(searchValue);
             return customerDB.List(page,pageSize, searchValue).ToList();
+        }
+        /// <summary>
+        /// Lấy thông tin của một khách hàng theo mã khách hàng
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Customer? GetCustomer(int id)
+        {
+            return customerDB.Get(id);
+        }
+        /// <summary>
+        /// Bổ sung 1 khách hàng mới . Hàm trả về mã của khách hàng mới được bổ sung 
+        /// (Hàm trả về -1 nếu email bị trùng , trả về giá trị 0 nếu lỗi)
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static int AddCustomer(Customer data)
+        {
+            return customerDB.Add(data);
+        }
+        /// <summary>
+        /// Cập nhật thông tin khách hàng 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static bool UpdateCustomer(Customer data)
+        {
+            return customerDB.Update(data);
+        }
+        /// <summary>
+        /// Xóa 1 khách hàng (nếu khách hàng đó dữ liệu liên quan) (bảng Order)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool DeleteCustomer(int id)
+        {
+            if(customerDB.IsUsed(id))
+            {
+                return false;
+            }
+            return customerDB.Delete(id);
+        }
+        /// <summary>
+        /// Kiểm tra xem 1 khách hàng hiện có dữ liệu liên quan hay không
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool IsUsedCustomer(int id) 
+        { 
+            return customerDB.IsUsed(id);
         }
         /// <summary>
         /// Tìm kiếm và lấy danh sách Nhà Cung Cấp
