@@ -35,5 +35,20 @@ namespace SV20T1020078.Web.Models
     public class CustomerSearchResult : BasePaginationResult
     {
         public List<Customer> Data { get; set; } = new List<Customer>();
+       
+    }
+    public class CategorySearchResult : BasePaginationResult
+    { 
+        public List<Category> Data { get; set; } = new List<Category>();
+    }
+
+    public class ShipperSearchResult : BasePaginationResult
+    {
+        public List<Shipper> Data { get; set; } = new List<Shipper>();
+    }
+
+    public class EmployeeSearchResult : BasePaginationResult
+    {
+        public List<Employee> Data { get; set; } = new List<Employee>();
     }
 }

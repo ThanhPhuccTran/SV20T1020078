@@ -11,7 +11,7 @@ namespace SV20T1020078.DomainModels
         /// <summary>
         /// Người giao hàng
         /// </summary>
-        public int SupplierID { get; set; }
+        public int ShipperID { get; set; }
         public string ShipperName { get; set; } = "";
         public string Phone { get; set; } = "";
 

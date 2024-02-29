@@ -1,4 +1,5 @@
-﻿@{
+﻿@model SV20T1020078.Web.Models.EmployeeSearchResult
+@{
     // Sử dụng layout khác
     // Layout = "_Layout2";
     // nếu ko có layout thì sử dụng layout mặc định
@@ -10,9 +11,9 @@
     <div class="box-body">
 
         <!--Form nhập đầu vào tìm kiếm-->
-        <form id="formSearch" action="#">
+        <form id="formSearch" action="#~/Employee">
             <div class="input-group">
-                <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên nhân viên cần tìm">
+                <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên nhân viên cần tìm" value="@Model.SearchValue">
 
                 <div class="input-group-btn">
                     <button class="btn btn-info" type="submit">
@@ -28,22 +29,22 @@
         <!-- Hiển thị kết quả tìm kiếm -->
         <div>
             <p style="margin: 10px 0 10px 0">
-                Có <strong>1,024</strong> nhân viên trong số <strong>100</strong> trang
+                Có <strong>@Model.RowCount</strong> nhân viên trong số <strong>@Model.PageCount</strong> trang
             </p>
             <div class="row">
 
-                @for(int i = 1; i <= 9; i++)
+                @foreach(var item in Model.Data)
                 {
                     <div class="col-sm-4">
                         <div class="box box-info">
 
                             <div class="box-header with-border">
-                                <h3 class="box-title">Nguyễn Thị Thanh Ngân</h3>
+                                <h3 class="box-title">@item.FullName</h3>
                                 <div class="box-tools pull-right">
-                                    <a class="btn btn-box-tool" href="~/Employee/Edit/123">
+                                    <a class="btn btn-box-tool" href="~/Employee/Edit/@item.EmployeeID">
                                         <i class="fa fa-edit text-primary"></i>
                                     </a>
-                                    <a class="btn btn-box-tool" href="~/Employee/Delete/123">
+                                    <a class="btn btn-box-tool" href="~/Employee/Delete/@item.EmployeeID">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
                                 </div>
@@ -57,13 +58,13 @@
                                     <div class="col-sm-8">
                                         <ul class="list-group list-group-unbordered">
                                             <li class="list-group-item">
-                                                <i class="fa fa-birthday-cake"></i> 01/11/1973
+                                                <i class="fa fa-birthday-cake"></i> @item.BirthDate
                                             </li>
                                             <li class="list-group-item">
-                                                <i class="fa fa-phone"></i> 06269045225
+                                                <i class="fa fa-phone"></i> @item.Phone
                                             </li>
                                             <li class="list-group-item">
-                                                <i class="fa fa-envelope"></i> thanhngan@mycompany.com
+                                                <i class="fa fa-envelope"></i> @item.Email
                                             </li>
                                         </ul>
                                     </div>
@@ -76,11 +77,17 @@
             </div>
             <div class="text-center">
                 <ul class="pagination">
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
+                    @for (int p = 1; p <= Model.PageCount; p++)
+                    {
+                        if (Model.Page == p)
+                        {
+                            <li class="active"><a href="#">@p</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="~/Employee?page=@p&searchValue=@Model.SearchValue">@p</a></li>
+                        }
+                    }
                 </ul>
             </div>
         </div>
