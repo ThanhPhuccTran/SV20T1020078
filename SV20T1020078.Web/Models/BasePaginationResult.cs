@@ -51,4 +51,9 @@ namespace SV20T1020078.Web.Models
     {
         public List<Employee> Data { get; set; } = new List<Employee>();
     }
+    public class SupplierSearchResult : BasePaginationResult
+    {
+        public List<Supplier> Data { get; set; } = new List<Supplier>();
+    }
+
 }

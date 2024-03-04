@@ -175,6 +175,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                                end";
                 var parameters = new
                 {
+                    CustomerId = data.CustomerID,
                     CustomerName = data.CustomerName ?? "",
                     ContactName = data.ContactName ?? "",
                     Province = data.Province ?? "",

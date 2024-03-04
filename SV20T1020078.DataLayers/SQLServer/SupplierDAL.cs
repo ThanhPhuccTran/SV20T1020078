@@ -18,7 +18,34 @@ namespace SV20T1020078.DataLayers.SQLServer
 
         public int Add(Supplier data)
         {
-            throw new NotImplementedException();
+            int id = 0;
+
+            using (var connection = OpenConnection())
+            {
+                var sql = @"if exists(select * from Suppliers where Email = @Email)
+                                select -1
+                            else
+                                begin
+                                    insert into Suppliers(SupplierName,ContactName,Provice,Address,Phone,Email)
+                                    values(@SupplierName,@ContactName,@Province,@Address,@Phone,@Email);
+
+                                    select @@identity;
+                                end";
+
+                var parameters = new
+                {
+                    SupplierName = data.SupplierName ?? "",
+                    ContactName = data.ContactName ?? "",
+                    Provice = data.Provice ?? "",
+                    Address = data.Address ?? "",
+                    Phone = data.Phone ?? "",
+                    Email = data.Email ?? "",
+                };
+                id = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
+                connection.Close();
+            }
+
+            return id;
         }
 
         public int Count(string searchValue = "")
@@ -40,24 +67,59 @@ namespace SV20T1020078.DataLayers.SQLServer
             return count;
         }
 
-        public bool Delete(Supplier data)
-        {
-            throw new NotImplementedException();
-        }
-
+       
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            using (var connection = OpenConnection())
+            {
+                var sql = @"delete from Suppliers where SupplierID = @SupplierID";
+                var parameters = new
+                {
+                    SupplierID = id
+                };
+                // thực thi câu lệnh
+                result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
+                connection.Close();
+            }
+            return result;
         }
 
         public Supplier? Get(int id)
         {
-            throw new NotImplementedException();
+            Supplier? data = null;
+            using (var connection = OpenConnection())
+            {
+                var sql = @"select * from Suppliers where SupplierID = @SupplierID";
+                var parameters = new
+                {
+                    SupplierID = id
+                };
+                data = connection.QueryFirstOrDefault<Supplier>(sql: sql, param: parameters, commandType: CommandType.Text);
+                connection.Close();
+            }
+            return data;
         }
 
         public bool IsUsed(int id)
         {
-            throw new NotImplementedException();
+
+            bool result = false;
+            using (var connection = OpenConnection())
+            {
+                var sql = @"if exists(select * from Products where SupplierID = @SupplierID)
+                                select 1
+                            else 
+                                select 0";
+                var parameters = new
+                {
+                    SupplierID = id
+                };
+                // thực thi câu lệnh
+                result = connection.ExecuteScalar<bool>(sql: sql, param: parameters, commandType: CommandType.Text);
+                connection.Close();
+            }
+            return result;
         }
 
         public IList<Supplier> List(int page = 1, int pageSize = 0, string searchValue = "")
@@ -96,7 +158,36 @@ namespace SV20T1020078.DataLayers.SQLServer
 
         public bool Update(Supplier data)
         {
-            throw new NotImplementedException();
+            bool result = false;
+
+            using (var connection = OpenConnection())
+            {
+                var sql = @"if not exists(select * from Suppliers where SupplierID <> @supplierID and Email = @email)
+                                begin
+                                    update Suppliers 
+                                    set SupplierName = @supplierName,
+                                        ContactName = @contactName,
+                                        Provice = @provice,
+                                        Address = @address,
+                                        Phone = @phone,
+                                        Email = @email,
+                                        where SupplierID = @supplierID
+                               end";
+
+                var parameters = new
+                {
+                    SupplierName = data.SupplierName ?? "",
+                    ContactName = data.ContactName ?? "",
+                    Provice = data.Provice ?? "",
+                    Address = data.Address ?? "",
+                    Phone = data.Phone ?? "",
+                    Email = data.Email ?? "",
+                };
+                result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
+                connection.Close();
+            }
+
+            return result;
         }
     }
 }

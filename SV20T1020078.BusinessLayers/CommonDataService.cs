@@ -36,7 +36,7 @@ namespace SV20T1020078.BusinessLayers
             categoryDB = new CategoryDAL(connectionString);
         }
         //Province
-        public static List<Province> ListOfCustomers() 
+        public static List<Province> ListOfProvinces() 
         {
             return provinceDB.List().ToList();
         }
@@ -102,7 +102,7 @@ namespace SV20T1020078.BusinessLayers
         /// <param name="id"></param>
         /// <returns></returns>
         public static bool IsUsedCustomer(int id)
-        {
+        {   
             return customerDB.IsUsed(id);
         }
 

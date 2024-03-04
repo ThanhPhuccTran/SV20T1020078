@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SV20T1020078.BusinessLayers;
+using SV20T1020078.DomainModels;
 
 namespace SV20T1020078.Web.Controllers
 {
@@ -37,19 +38,52 @@ namespace SV20T1020078.Web.Controllers
         public IActionResult Create()
         {
             ViewBag.Title = "Bổ sung khách hàng";
+            var model = new Customer()
+            {
+                CustomerID = 0
+            };
             // dùng chung giao diện với Edit
-            return View("Edit");
+            return View("Edit" , model);
         }
 
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id = 0)
         {
             ViewBag.Title = "Cập nhật thông tin khách hàng";
-            return View();
-        }
+            var model = CommonDataService.GetCustomer(id);
+            if(model == null)
+            {
+                return RedirectToAction("Index");
+            }
 
-        public IActionResult Delete(string id)
+            return View(model);
+        }
+        [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
+        public IActionResult Save(Customer model)  // viết tường minh :  int customerID , string custormerName ,....
         {
-            return View();
+            if(model.CustomerID == 0)
+            {
+                int id = CommonDataService.AddCustomer(model);
+            }
+            else
+            {
+                bool result = CommonDataService.UpdateCustomer(model);
+            }
+            return RedirectToAction("Index");
+        }
+        public IActionResult Delete(int id = 0)
+        {   
+            if(Request.Method== "POST")
+            {
+                bool result = CommonDataService.DeleteCustomer(id);
+                return RedirectToAction("Index");
+            }   
+            var model = CommonDataService.GetCustomer(id);
+            if(model == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
     }
 }

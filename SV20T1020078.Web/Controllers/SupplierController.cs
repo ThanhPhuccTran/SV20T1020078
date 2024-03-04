@@ -5,18 +5,21 @@ namespace SV20T1020078.Web.Controllers
 {
     public class SupplierController : Controller
     {
+        const int PAGE_SIZE = 20;
         public IActionResult Index(int page = 1 , string searchValue = "")
         {
-            int pageSize = 20;
             int rowCount = 0;
-            var data = CommonDataService.ListOfSuppliers(out rowCount , page, pageSize , searchValue);
-            ViewBag.PageSize = page;
-            ViewBag.RowCount = rowCount;
-            int pageCount = rowCount / pageSize;
-            if (rowCount % pageSize > 0)
-                pageCount += 1;
-            ViewBag.PageCount = pageCount;
-            return View(data);
+            var data = CommonDataService.ListOfSuppliers(out rowCount, page, PAGE_SIZE, searchValue ?? "");
+            var model = new Models.SupplierSearchResult()
+            {
+                Page = page,
+                PageSize = PAGE_SIZE,
+                SearchValue = searchValue ?? "",
+                RowCount = rowCount,
+                Data = data
+
+            };
+            return View(model);
         }
 
         public IActionResult Create() 
