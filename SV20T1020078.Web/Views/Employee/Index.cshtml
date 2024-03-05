@@ -11,7 +11,7 @@
     <div class="box-body">
 
         <!--Form nhập đầu vào tìm kiếm-->
-        <form id="formSearch" action="#~/Employee">
+        <form id="formSearch" action="~/Employee">
             <div class="input-group">
                 <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên nhân viên cần tìm" value="@Model.SearchValue">
 
@@ -52,10 +52,10 @@
 
                             <div class="box-body">
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <img class="profile-user-img img-responsive img-bordered" src="~/images/employees/photo.png">
                                     </div>
-                                    <div class="col-sm-8">
+                                    <div class="col-sm-9">
                                         <ul class="list-group list-group-unbordered">
                                             <li class="list-group-item">
                                                 <i class="fa fa-birthday-cake"></i> @item.BirthDate

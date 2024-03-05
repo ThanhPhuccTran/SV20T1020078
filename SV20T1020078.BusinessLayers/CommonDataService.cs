@@ -327,9 +327,9 @@ namespace SV20T1020078.BusinessLayers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Shipper? GetCategory(int id)
+        public static Category? GetCategory(int id)
         {
-            return shipperDB.Get(id);
+            return categoryDB.Get(id);
         }
 
         /// <summary>

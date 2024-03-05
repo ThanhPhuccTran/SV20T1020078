@@ -21,12 +21,12 @@ namespace SV20T1020078.DataLayers.SQLServer
 
             using (var connection = OpenConnection())
             {
-                var sql = @"if exists(select * from Categories )
+                var sql = @"if exists(select * from Categories where CategoryName = @CategoryName)
                                 select -1
                             else
                                 begin
                                     insert into Categories(CategoryName,Description)
-                                    values(@CategoriesName,@Description);
+                                    values(@CategoryName,@Description);
 
                                     select @@identity;
                                 end";
@@ -160,16 +160,15 @@ namespace SV20T1020078.DataLayers.SQLServer
 
             using (var connection = OpenConnection())
             {
-                var sql = @"if not exists(select * from Categories where CategoryID <> @categoryId)
-                                begin
-                                    update Categories 
+                var sql = @"        update Categories 
                                     set CategoryName = @categoryName,
                                         Description = @description
-                                        where CategoryID = @categoryId
-                               end";
+                                        where CategoryId = @categoryId
+                               ";
 
                 var parameters = new
-                {
+                {   
+                    CategoryId = data.CategoryID,
                     CategoryName = data.CategoryName ?? "",
                     Description = data.Description ?? "",
                 };

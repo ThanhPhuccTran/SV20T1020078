@@ -89,7 +89,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                 var sql = @"select * from Shippers where ShipperID = @ShipperID";
                 var parameters = new
                 {
-                    CustomerId = id
+                    ShipperID = id
                 };
                 data = connection.QueryFirstOrDefault<Shipper>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
@@ -160,16 +160,15 @@ namespace SV20T1020078.DataLayers.SQLServer
 
             using (var connection = OpenConnection())
             {
-                var sql = @"if not exists(select * from Shippers where ShipperID <> @ShipperID )
-                                begin
+                var sql = @"
                                     update Shippers 
                                     set ShipperName = @ShipperName,
-                                        Phone = @phone,
-                                        where ShipperID = @ShipperID
-                               end";
+                                        Phone = @phone
+                                        where ShipperID = @ShipperID";
 
                 var parameters = new
                 {
+                    ShipperID = data.ShipperID,
                     ShipperName = data.ShipperName ?? "",
                     Phone = data.Phone ?? "",
                 };

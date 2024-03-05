@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SV20T1020078.BusinessLayers;
+using SV20T1020078.DomainModels;
 
 namespace SV20T1020078.Web.Controllers
 {
@@ -25,18 +26,53 @@ namespace SV20T1020078.Web.Controllers
         public IActionResult Create() 
         {
             ViewBag.Title = "Bổ sung nhà cung cấp";
-            return View("Edit");
+            var model = new Supplier()
+            {
+                SupplierID = 0
+            };
+            // dùng chung giao diện với Edit
+            return View("Edit", model);
+            
         }
 
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id = 0)
         {
             ViewBag.Title = "Sửa thông tin nhà cung cấp";
-            return View();
-        }
+            var model = CommonDataService.GetSupplier(id);
+            if (model == null)
+            {
+                return RedirectToAction("Index");
+            }
 
-        public IActionResult Delete(string id)
+            return View(model);
+        }
+        [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
+        public IActionResult Save(Supplier model)  // viết tường minh :  int customerID , string custormerName ,....
         {
-            return View();
+            if (model.SupplierID == 0)
+            {
+                int id = CommonDataService.AddSupplier(model);
+            }
+            else
+            {
+                bool result = CommonDataService.UpdateSupplier(model);
+            }
+            return RedirectToAction("Index");
+        }
+        public IActionResult Delete(int id = 0)
+        {
+            if (Request.Method == "POST")
+            {
+                bool result = CommonDataService.DeleteSupplier(id);
+                return RedirectToAction("Index");
+            }
+            var model = CommonDataService.GetSupplier(id);
+            if (model == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
 
     }

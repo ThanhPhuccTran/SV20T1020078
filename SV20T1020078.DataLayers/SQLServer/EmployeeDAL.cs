@@ -25,8 +25,8 @@ namespace SV20T1020078.DataLayers.SQLServer
                                 select -1
                             else
                                 begin
-                                    insert into Employees(FullName,BirthDate,Address,Phone,Email,Photo,IsWoking)
-                                    values(@FullName,@BirthDate,@Address,@Phone,@Email,@Photo,@IsWoking);
+                                    insert into Employees(FullName,BirthDate,Address,Phone,Email,Password,Photo,IsWorking)
+                                    values(@FullName,@BirthDate,@Address,@Phone,@Email,@Photo,@Password,@IsWorking);
 
                                     select @@identity;
                                 end";
@@ -38,6 +38,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
+                    Password = data.Password ?? "",
                     Photo = data.Photo ?? "",
                     IsWorking = data.IsWorking
                 };
@@ -94,7 +95,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                 var sql = @"select * from Employees where EmployeeID = @EmployeeID";
                 var parameters = new
                 {
-                    CustomerId = id
+                    EmployeeID = id
                 };
                 data = connection.QueryFirstOrDefault<Employee>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
@@ -166,25 +167,28 @@ namespace SV20T1020078.DataLayers.SQLServer
             using (var connection = OpenConnection())
             {
                 var sql = @"if not exists(select * from Employees where EmployeeID <> @EmployeeID and Email = @email)
-                                begin
-                                    update Employees 
-                                    set FullName = @FullName,
-                                        BirthDate = @BirthDate,
-                                        Address = @address,
-                                        Phone = @phone,
-                                        Email = @email,
-                                        Photo = @photo
-                                        IsWorking = @isWorking
-                                        where EmployeeID = @EmployeeID
-                               end";
+                        begin
+                            update Employees 
+                            set FullName = @FullName,
+                                BirthDate = @BirthDate,
+                                Address = @address,
+                                Phone = @phone,
+                                Email = @email,
+                                Password = @password,
+                                Photo = @photo,
+                                IsWorking = @isWorking
+                                where EmployeeID = @EmployeeID
+                       end";
 
                 var parameters = new
                 {
+                    employeeId = data.EmployeeID,
                     FullName = data.FullName ?? "",
                     BirthDate = data.BirthDate,
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
+                    Password = data.Password ??"",
                     Photo = data.Photo ?? "",
                     IsWorking = data.IsWorking
                 };

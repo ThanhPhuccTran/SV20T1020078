@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SV20T1020078.BusinessLayers;
+using SV20T1020078.DomainModels;
 using System.Buffers;
 
 namespace SV20T1020078.Web.Controllers
@@ -25,17 +26,50 @@ namespace SV20T1020078.Web.Controllers
         public IActionResult Create()
         {
             ViewBag.Title = "Bổ sung nhân viên";
-            return View("Edit");
+            var model = new Employee()
+            {
+                EmployeeID = 0
+            };
+            return View("Edit", model);
         }
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id = 0)
         {
-            ViewBag.Title = "Sửa thông tin nhân viên";
-            return View();
-        }
+            ViewBag.Title = "Cập nhật thông tin nhân viên";
+            var model = CommonDataService.GetEmployee(id);
+            if (model == null)
+            {
+                return RedirectToAction("Index");
+            }
 
-        public IActionResult Delete(string id)
+            return View(model);
+        }
+        [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
+        public IActionResult Save(Employee model)  // viết tường minh :  int customerID , string custormerName ,....
         {
-            return View();
+            if (model.EmployeeID == 0)
+            {
+                int id = CommonDataService.AddEmployee(model);
+            }
+            else
+            {
+                bool result = CommonDataService.UpdateEmployee(model);
+            }
+            return RedirectToAction("Index");
+        }
+        public IActionResult Delete(int id = 0)
+        {
+            if (Request.Method == "POST")
+            {
+                bool result = CommonDataService.DeleteEmployee(id);
+                return RedirectToAction("Index");
+            }
+            var model = CommonDataService.GetEmployee(id);
+            if (model == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
     }
 }

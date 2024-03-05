@@ -37,7 +37,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
-                    data.IsLocked,
+                    IsLocked =data.IsLocked,
                 };
                 id = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
@@ -182,7 +182,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
-                    data.IsLocked,
+                    IsLocked = data.IsLocked,
                 };
                 result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
                 connection.Close();

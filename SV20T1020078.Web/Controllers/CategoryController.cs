@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SV20T1020078.BusinessLayers;
+using SV20T1020078.DomainModels;
 
 namespace SV20T1020078.Web.Controllers
 {
@@ -25,18 +26,50 @@ namespace SV20T1020078.Web.Controllers
         public IActionResult Create()
         {
             ViewBag.Title = "Bổ sung loại hàng";
-            return View("Edit");
+            var model = new Category()
+            {
+                CategoryID = 0
+            };
+            return View("Edit",model);
         }
 
-        public IActionResult Edit(string id)
+        public IActionResult Edit(int id = 0)
         {
-            ViewBag.Title = "Sửa loại hàng";
-            return View();
+            ViewBag.Title = "Cập nhật loại hàng";
+            var model = CommonDataService.GetCategory(id);
+            if (model == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(model);
         }
-
-        public IActionResult Delete(string id)
+        [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
+        public IActionResult Save(Category model)  // viết tường minh :  int customerID , string custormerName ,....
         {
-            return View();
+            if (model.CategoryID == 0)
+            {
+                int id = CommonDataService.AddCategory(model);
+            }
+            else
+            {
+                bool result = CommonDataService.UpdateCategory(model);
+            }
+            return RedirectToAction("Index");
+        }
+        public IActionResult Delete(int id = 0)
+        {
+            if (Request.Method == "POST")
+            {
+                bool result = CommonDataService.DeleteCategory(id);
+                return RedirectToAction("Index");
+            }
+            var model = CommonDataService.GetCategory(id);
+            if (model == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
     }
 }

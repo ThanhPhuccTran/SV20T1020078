@@ -26,7 +26,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                                 select -1
                             else
                                 begin
-                                    insert into Suppliers(SupplierName,ContactName,Provice,Address,Phone,Email)
+                                    insert into Suppliers(SupplierName,ContactName,Province,Address,Phone,Email)
                                     values(@SupplierName,@ContactName,@Province,@Address,@Phone,@Email);
 
                                     select @@identity;
@@ -36,7 +36,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                 {
                     SupplierName = data.SupplierName ?? "",
                     ContactName = data.ContactName ?? "",
-                    Provice = data.Provice ?? "",
+                    Province = data.Province ?? "",
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
@@ -167,18 +167,19 @@ namespace SV20T1020078.DataLayers.SQLServer
                                     update Suppliers 
                                     set SupplierName = @supplierName,
                                         ContactName = @contactName,
-                                        Provice = @provice,
+                                        Province = @Province,
                                         Address = @address,
                                         Phone = @phone,
-                                        Email = @email,
+                                        Email = @email
                                         where SupplierID = @supplierID
                                end";
 
                 var parameters = new
                 {
+                    SupplierID = data.SupplierID,
                     SupplierName = data.SupplierName ?? "",
                     ContactName = data.ContactName ?? "",
-                    Provice = data.Provice ?? "",
+                    Province = data.Province ?? "",
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
