@@ -28,7 +28,10 @@ namespace SV20T1020078.Web.Controllers
             ViewBag.Title = "Bổ sung nhân viên";
             var model = new Employee()
             {
-                EmployeeID = 0
+                EmployeeID = 0,
+                Photo = "nophoto.png",
+                BirthDate = new DateTime(1990, 1, 1),
+                IsWorking=true,
             };
             return View("Edit", model);
         }
@@ -40,12 +43,37 @@ namespace SV20T1020078.Web.Controllers
             {
                 return RedirectToAction("Index");
             }
+            if (string.IsNullOrWhiteSpace(model.Photo))
+            {
+                model.Photo = "nophoto.png";
+            }
 
             return View(model);
         }
         [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
-        public IActionResult Save(Employee model)  // viết tường minh :  int customerID , string custormerName ,....
+        public IActionResult Save(Employee model ,string birthDateInput ="",IFormFile? uploadPhoto = null)  // viết tường minh :  int customerID , string custormerName ,....
         {
+            //xử lý ngày sinh
+            DateTime? date = birthDateInput.ToDateTime(); // mở rộng chức năng cho giá trị kiểu chuỗi  => this s
+            if(date.HasValue)
+            {
+                model.BirthDate = date.Value;
+            }
+            //Xử lý ảnh upload : Nếu như có ảnh upload thì lưu ảnh lên server, gắn tên file ảnh đã lưu cho model.Photo
+            if (uploadPhoto != null)
+            {
+                string fileName = $"{DateTime.Now.Ticks}_{uploadPhoto.FileName}"; // Tên file sẽ lưu trên server $ tránh bị lưu file cùng tên 
+                //đường dẫn đến file sẽ lưu trên server vd (: D:\MyWeb\wwwroot\images\employees\photo.png)
+                string filePath = Path.Combine(ApplicationContext.HostEnviroment.WebRootPath, @"images\employees", fileName);
+
+                //Lưu file lên server
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    uploadPhoto.CopyTo(stream);
+                }
+                // Gán tên file ảnh cho model.Photo
+                model.Photo = fileName;
+            }
             if (model.EmployeeID == 0)
             {
                 int id = CommonDataService.AddEmployee(model);

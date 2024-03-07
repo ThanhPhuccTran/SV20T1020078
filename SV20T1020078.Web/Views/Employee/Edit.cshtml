@@ -5,7 +5,7 @@
 
 <div class="box box-primary">
     <div class="box-body">
-        <!--enctype="multipart/form-data" khi nào có file thì dùng thuộc tính này trong form-->
+        <!--enctype="multipart/form-data" khi nào có uploadfile thì dùng thuộc tính này trong form-->
         <form class="form-horizontal" method="post" enctype="multipart/form-data" action="~/Employee/Save">
             <input type="hidden" name="@nameof(Model.EmployeeID)" value="@Model.EmployeeID" />
             <div class="form-group">
@@ -18,7 +18,10 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Ngày sinh:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" name="@nameof(Model.BirthDate)" value="@Model.BirthDate"/>
+
+                    <input type="hidden" class="form-control" name="@nameof(Model.BirthDate)" value="@Model.BirthDate"/>
+                    <input type="text" class="form-control date-picker" name="birthDateInput" 
+                                                            value="@Model.BirthDate.ToString("dd/MM/yyyy",new System.Globalization.CultureInfo("en-GB"))"/>
                 </div>
             </div>
 
@@ -47,8 +50,8 @@
                 <div class="col-lg-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="@nameof(Model.IsWorking)" value="@(Model.IsWorking ? true : false)" />
-                            @(Model.IsWorking ? "Nhân viên đang làm việc" : "Nhân viên đang không làm việc")
+                            <input type="checkbox" name="@nameof(Model.IsWorking)" value="true"@(Model.IsWorking ? "checked" : "") />
+                            Nhân viên đang làm việc
                         </label>
                     </div>
                 </div>
@@ -57,6 +60,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Ảnh cá nhân:</label>
                 <div class="col-sm-10">
+                    <input type="hidden" name="@nameof(Model.Photo)" value="@Model.Photo" />
                     <input type="file" class="form-control" name="uploadPhoto" accept="image/*"
                            onchange="document.getElementById('Photo').src = window.URL.createObjectURL(this.files[0])" />
                 </div>
@@ -64,8 +68,8 @@
 
             <div class="form-group">
                 <div class="col-lg-offset-2 col-sm-10">
-                <input type="hidden" name="@nameof(Model.Photo)" value="photo.png" />
-                    <img id="Photo" src="~/images/employees/photo.png" class="img img-bordered" style="width:200px" />
+                    @* <input type="hidden" name="@nameof(Model.Photo)" value="photo.png" /> *@
+                    <img id="Photo" src="~/images/employees/@Model.Photo" class="img img-bordered" style="width:200px" />
                 </div>
             </div>
 

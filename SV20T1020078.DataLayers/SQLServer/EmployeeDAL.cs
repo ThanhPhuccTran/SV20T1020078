@@ -26,7 +26,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                             else
                                 begin
                                     insert into Employees(FullName,BirthDate,Address,Phone,Email,Password,Photo,IsWorking)
-                                    values(@FullName,@BirthDate,@Address,@Phone,@Email,@Photo,@Password,@IsWorking);
+                                    values(@FullName,@BirthDate,@Address,@Phone,@Email,'',@Photo,@IsWorking);
 
                                     select @@identity;
                                 end";
@@ -38,7 +38,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
-                    Password = data.Password ?? "",
+                    Password = data.Password ??"",
                     Photo = data.Photo ?? "",
                     IsWorking = data.IsWorking
                 };
@@ -53,19 +53,16 @@ namespace SV20T1020078.DataLayers.SQLServer
         {
             int count = 0;
 
-
             if (!string.IsNullOrEmpty(searchValue))
-                searchValue = "%" + searchValue + "%"; // tìm kiếm dữ liệu đếm được 
-            // kết nối đến CSDL
+                searchValue = "%" + searchValue + "%";
+
             using (var connection = OpenConnection())
             {
-                //Ctr K + D
                 var sql = @"select count(*) from Employees 
                             where (@searchValue = N'') or (FullName like @searchValue)";
                 var parameters = new { searchValue = searchValue ?? "" };
                 count = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
-
             }
             return count;
         }
@@ -95,7 +92,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                 var sql = @"select * from Employees where EmployeeID = @EmployeeID";
                 var parameters = new
                 {
-                    EmployeeID = id
+                    EmployeeId = id
                 };
                 data = connection.QueryFirstOrDefault<Employee>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
@@ -128,35 +125,30 @@ namespace SV20T1020078.DataLayers.SQLServer
             List<Employee> list = new List<Employee>();
 
             if (!string.IsNullOrEmpty(searchValue))
-            {
-                searchValue = "%" + searchValue + "%"; // tìm kiếm tương đối sql
+                searchValue = "%" + searchValue + "%"; //Viet => %Viet%
 
-            }
-
-            //ket csdl 
             using (var connection = OpenConnection())
             {
                 var sql = @"with cte as
                             (
-	                            select	*, row_number() over (order by FullName) as RowNumber
-	                            from	Employees 
-	                            where	(@searchValue = N'') or (FullName like @searchValue)
+	                                select	*, row_number() over (order by FullName) as RowNumber
+	                                from	Employees 
+	                                where	(@searchValue = N'') or (FullName like @searchValue)
                             )
-                            select * from cte
-                            where  (@pageSize = 0) 
-                                   or (RowNumber between (@page - 1) * @pageSize + 1 and @page * @pageSize)
-                            order by RowNumber";
-                //gán giá trị cho tham siis
+                                select * from cte
+                                where  (@pageSize = 0) 
+                                        or (RowNumber between (@page - 1) * @pageSize + 1 and @page * @pageSize)
+                                order by RowNumber ";
                 var parameters = new
                 {
-                    page,
-                    pageSize,
+                    page = page,
+                    pageSize = pageSize,
                     searchValue = searchValue ?? ""
                 };
                 list = connection.Query<Employee>(sql: sql, param: parameters, commandType: CommandType.Text).ToList();
                 connection.Close();
-
             }
+
             return list;
         }
 
@@ -167,18 +159,17 @@ namespace SV20T1020078.DataLayers.SQLServer
             using (var connection = OpenConnection())
             {
                 var sql = @"if not exists(select * from Employees where EmployeeID <> @EmployeeID and Email = @email)
-                        begin
-                            update Employees 
-                            set FullName = @FullName,
-                                BirthDate = @BirthDate,
-                                Address = @address,
-                                Phone = @phone,
-                                Email = @email,
-                                Password = @password,
-                                Photo = @photo,
-                                IsWorking = @isWorking
-                                where EmployeeID = @EmployeeID
-                       end";
+                                begin
+                                    update Employees 
+                                    set FullName = @FullName,
+                                        BirthDate = @BirthDate,
+                                        Address = @address,
+                                        Phone = @phone,
+                                        Email = @email,
+                                        Photo = @photo,
+                                        IsWorking = @isWorking
+                                        where EmployeeID = @EmployeeID
+                               end";
 
                 var parameters = new
                 {
@@ -188,7 +179,6 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
-                    Password = data.Password ??"",
                     Photo = data.Photo ?? "",
                     IsWorking = data.IsWorking
                 };

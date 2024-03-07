@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6078,6 +6078,10 @@
     <None Include="wwwroot\themes\bower_components\select2\src\scss\_dropdown.scss" />
     <None Include="wwwroot\themes\bower_components\select2\src\scss\_multiple.scss" />
     <None Include="wwwroot\themes\bower_components\select2\src\scss\_single.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
