@@ -1,4 +1,4 @@
-﻿@model SV20T1020078.Web.Models.SupplierSearchResult
+﻿@model SV20T1020078.Web.Models.PaginationSearchInput
 @{
     // Sử dụng layout khác
     // Layout = "_Layout2";
@@ -11,7 +11,7 @@
     <div class="box-body">
 
         <!--Form nhập đầu vào tìm kiếm-->
-        <form id="formSearch" action="~/Supplier">
+        <form id="formSearch" action="~/Supplier/Search" method="get" data-container="#searchResult">
             <div class="input-group">
                 <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên nhà cung cấp cần tìm">
 
@@ -27,60 +27,42 @@
         </form>
 
         <!-- Hiển thị kết quả tìm kiếm -->
-        <div>
-            <p style="margin: 10px 0 10px 0">
-                Có <strong>@Model.RowCount</strong> nhà cung cấp trong số <strong>@Model.PageCount</strong> trang
-            </p>
-            <div class="table-responsive">
-                <table class=" table table-bordered table-hover table-striped">
-                    <!--Header-->
-                    <thead>
-                        <tr class="bg-primary">
-                            <th>Tên nhà cung cấp</th>
-                            <th>Tên giao dịch</th>
-                            <th>Điện thoại</th>
-                            <th>Email</th>
-                            <th>Địa chỉ</th>
-                            <th>Tỉnh thành</th>
-                            <th style="width:80px"></th>
-                        </tr>
-                    </thead>
-
-                    <!--Body-->
-                    <tbody>
-                        @foreach (var item in Model.Data)
-                        {
-                            <tr>
-                                <td>@item.SupplierName</td>
-                                <td>@item.ContactName</td>
-                                <td>@item.Phone</td>
-                                <td>@item.Email</td>
-                                <td>@item.Address</td>
-                                <td>@item.Province</td>
-                                <td class="text-right">
-                                    <a href="~/Supplier/Edit/@item.SupplierID" class="btn btn-xs btn-info">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="~/Supplier/Delete/@item.SupplierID" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-remove"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="text-center">
-                <ul class="pagination">
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                </ul>
-            </div>
-        </div>
+        <div id="searchResult"></div>
 
     </div>
 </div>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#formSearch").submit(function (e) {
+                e.preventDefault();
+                doSearch(this, 1);
+                return;
+            });
+
+            doSearch("#formSearch", @Model.Page);
+        });
+
+        function doSearch(formSearchInput, page) {
+            var url = $(formSearchInput).prop("action");
+            var container = $(formSearchInput).data("container");
+            var postData = $(formSearchInput).serializeArray();
+            postData.push({ "name": "page", "value": page });
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: postData,
+                error: function () {
+                    alert("Your request is not valid!");
+                },
+                success: function (data) {
+                    $(container).html(data);
+                }
+            });
+
+            return;
+        }
+    </script>
+}

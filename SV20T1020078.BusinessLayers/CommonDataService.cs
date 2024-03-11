@@ -379,5 +379,15 @@ namespace SV20T1020078.BusinessLayers
             return employeeDB.IsUsed(id);
         }
 
+
+
+        public static List<Category> ListOfCategoryName(string searchValue="")
+        {
+            return categoryDB.List(1,0,searchValue).ToList();
+        }
+        public static List<Supplier> ListOfSupplierName(string searchValue = "")
+        {
+            return supplierDB.List(1, 0, searchValue).ToList();
+        }
     }
 }

@@ -102,21 +102,21 @@ namespace SV20T1020078.DataLayers.SQLServer
 
         public bool IsUsed(int id)
         {
-            bool result = false;
-            using (var connection = OpenConnection())
-            {
-                var sql = @"if exists(select * from Orders where CustomerId = @CustomerId)
-                                select 1
-                            else 
-                                select 0";
-                var parameters = new
+                bool result = false;
+                using (var connection = OpenConnection())
                 {
-                    CustomerId = id
-                };
-                result = connection.ExecuteScalar<bool>(sql: sql, param: parameters, commandType: CommandType.Text);
-                connection.Close();
-            }
-            return result;
+                    var sql = @"if exists(select * from Orders where CustomerId = @CustomerId)
+                                    select 1
+                                else 
+                                    select 0";
+                    var parameters = new
+                    {
+                        CustomerId = id
+                    };
+                    result = connection.ExecuteScalar<bool>(sql: sql, param: parameters, commandType: CommandType.Text);
+                    connection.Close();
+                }
+                return result;
         }
 
         public IList<Customer> List(int page = 1, int pageSize = 0, string searchValue = "")

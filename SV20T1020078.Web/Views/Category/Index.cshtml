@@ -1,4 +1,4 @@
-﻿@model SV20T1020078.Web.Models.CategorySearchResult
+﻿@model SV20T1020078.Web.Models.PaginationSearchInput
 @{
     // Sử dụng layout khác
     // Layout = "_Layout2";
@@ -11,9 +11,10 @@
     <div class="box-body">
 
         <!--Form nhập đầu vào tìm kiếm-->
-        <form id="formSearch" action="~/Category">
+        <form id="formSearch" action="~/Category/Search" method="get" data-container="#searchResult">
             <div class="input-group">
-                <input name="searchValue" type="text" class="form-control" placeholder="Nhập tên loại hàng cần tìm" value="@Model.SearchValue">
+                <input type="hidden" name="@nameof(Model.PageSize)" value="@Model.PageSize" />
+                <input type="text" name="@nameof(Model.SearchValue)" class="form-control" placeholder="Nhập tên loại hàng cần tìm" value="@Model.SearchValue">
 
                 <div class="input-group-btn">
                     <button class="btn btn-info" type="submit">
@@ -27,58 +28,40 @@
         </form>
 
         <!-- Hiển thị kết quả tìm kiếm -->
-        <div>
-            <p style="margin: 10px 0 10px 0">
-                Có <strong>@Model.RowCount</strong> loại hàng trong số <strong>@Model.PageCount</strong> trang
-            </p>
-            <div class="table-responsive">
-                <table class=" table table-bordered table-hover table-striped">
-                    <!--Header-->
-                    <thead>
-                        <tr class="bg-primary">
-                            <th>Tên loại hàng </th>
-                            <th>Mô tả</th>
-                            <th style="width:80px"></th>
-                        </tr>
-                    </thead>
-
-                    <!--Body-->
-                    <tbody>
-                        @foreach (var item in Model.Data)
-                        {
-                            <tr>
-                                <td>@item.CategoryName</td>
-                                <td>@item.Description</td>
-                                <td class="text-right">
-                                    <a href="~/Category/Edit/@item.CategoryID" class="btn btn-xs btn-info">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="~/Category/Delete/@item.CategoryID" class="btn btn-xs btn-danger">
-                                        <i class="fa fa-remove"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="text-center">
-                <ul class="pagination">
-                    @for (int p = 1; p <= Model.PageCount; p++)
-                    {
-                        if (Model.Page == p)
-                        {
-                            <li class="active"><a href="#">@p</a></li>
-                        }
-                        else
-                        {
-                            <li><a href="~/Category?page=@p&searchValue=@Model.SearchValue">@p</a></li>
-                        }
-                    }
-                </ul>
-            </div>
-        </div>
+        <div id="searchResult"></div>
 
     </div>
 </div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#formSearch").submit(function (e) {
+                e.preventDefault();
+                doSearch(this, 1);
+                return;
+            });
+
+            doSearch("#formSearch", @Model.Page);
+        });
+
+        function doSearch(formSearchInput, page) {
+            var url = $(formSearchInput).prop("action");
+            var container = $(formSearchInput).data("container");
+            var postData = $(formSearchInput).serializeArray();
+            postData.push({ "name": "page", "value": page });
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: postData,
+                error: function () {
+                    alert("Your request is not valid!");
+                },
+                success: function (data) {
+                    $(container).html(data);
+                }
+            });
+
+            return;
+        }
+    </script>
+}

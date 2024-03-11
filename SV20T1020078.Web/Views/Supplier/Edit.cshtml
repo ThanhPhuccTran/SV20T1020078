@@ -10,11 +10,13 @@
             <div class="form-group">
                 <label>Tên nhà cung cấp:</label>
                 <input type="text" class="form-control" name="@nameof(Model.SupplierName)" value="@Model.SupplierName" autofocus >
+                @Html.ValidationMessageFor(m => m.SupplierName, "", new { @style = "color:#f00" })
             </div>
 
             <div class="form-group">
                 <label>Tên giao dịch:</label>
                 <input type="text" class="form-control" name="@nameof(Model.ContactName)" value="@Model.ContactName">
+                @Html.ValidationMessageFor(m => m.ContactName, "", new { @style = "color:#f00" })
             </div>
 
             <div class="form-group">
@@ -25,6 +27,7 @@
             <div class="form-group">
                 <label>Email:</label>
                 <input type="email" class="form-control" name="@nameof(Model.Email)" value="@Model.Email">
+                @Html.ValidationMessage(nameof(Model.Email), new { @style = "color:#f00" })
             </div>
 
             <div class="form-group">
@@ -34,7 +37,7 @@
 
             <div class="form-group">
                 <label>Tỉnh thành:</label>
-                <select class="form-control" name="Province">
+               @*  <select class="form-control" name="Province">
                     <option>-- Chọn tỉnh/thành --</option>
                     @foreach (var item in SV20T1020078.BusinessLayers.CommonDataService.ListOfProvinces())
                     {
@@ -48,7 +51,9 @@
                         }
                     }
 
-                </select>
+                </select> *@
+                @Html.DropDownListFor(m => m.Province, SelectListHelper.Pronvinces(), new { @class = "form-control" })
+                @Html.ValidationMessage(nameof(Model.Province), new { @style = "color:#f00" })
             </div>
 
           
@@ -58,6 +63,9 @@
                     <i class="fa fa-floppy-o"></i> Lưu dữ liệu
                 </button>
                 <a href="~/Supplier" class="btn btn-default">Quay lại</a>
+            </div>
+            <div class="form-group">
+                @Html.ValidationMessage("Error", new { @style = "color:#f00" })
             </div>
         </form>
     </div>

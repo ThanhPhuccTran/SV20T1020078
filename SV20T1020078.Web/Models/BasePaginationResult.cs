@@ -56,4 +56,16 @@ namespace SV20T1020078.Web.Models
         public List<Supplier> Data { get; set; } = new List<Supplier>();
     }
 
+    public class ProductSearchResult : BasePaginationResult
+    {
+        public List<Product> Data { get; set; } = new List<Product>();
+        public int categoryID { get; set; }
+        public int supplierID { get; set; }
+    }
+
+    public class ProductPhotoSearchResult : BasePaginationResult
+    {
+        public List<ProductPhoto> Data { get; set; }
+    }
+
 }

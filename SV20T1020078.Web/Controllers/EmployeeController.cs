@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SV20T1020078.BusinessLayers;
 using SV20T1020078.DomainModels;
+using SV20T1020078.Web.Models;
 using System.Buffers;
 
 namespace SV20T1020078.Web.Controllers
@@ -9,9 +10,10 @@ namespace SV20T1020078.Web.Controllers
     public class EmployeeController : Controller
     {
         const int PAGE_SIZE = 20;
+        const string EMPLOYEE_SEARCH = "employee_search";
         public IActionResult Index(int page = 1, string searchValue = "")
         {
-            int rowCount = 0;
+            /*int rowCount = 0;
             var data = CommonDataService.ListOfEmployees(out rowCount, page, PAGE_SIZE, searchValue ?? "");
             var model = new Models.EmployeeSearchResult()
             {
@@ -21,7 +23,19 @@ namespace SV20T1020078.Web.Controllers
                 RowCount = rowCount,
                 Data = data
             };
-            return View(model);
+            return View(model);*/
+            Models.PaginationSearchInput? input = ApplicationContext.GetSessionData<PaginationSearchInput>(EMPLOYEE_SEARCH);
+            if (input == null)
+            {
+                input = new PaginationSearchInput
+                {
+                    Page = 1,
+                    PageSize = PAGE_SIZE,
+                    SearchValue = "",
+                };
+
+            }
+            return View(input);
         }
         public IActionResult Create()
         {
@@ -34,6 +48,23 @@ namespace SV20T1020078.Web.Controllers
                 IsWorking=true,
             };
             return View("Edit", model);
+        }
+        public IActionResult Search(PaginationSearchInput input)
+        {
+            int rowCount = 0;
+            var data = CommonDataService.ListOfEmployees(out rowCount, input.Page, input.PageSize, input.SearchValue ?? "");
+            var model = new EmployeeSearchResult()
+            {
+                Page = input.Page,
+                PageSize = input.PageSize,
+                SearchValue = input.SearchValue ?? "",
+                RowCount = rowCount,
+                Data = data
+            };
+
+            //Lưu lại điều kiênn tim kiếm
+            ApplicationContext.SetSessionData(EMPLOYEE_SEARCH, input);
+            return View(model);
         }
         public IActionResult Edit(int id = 0)
         {
@@ -53,6 +84,28 @@ namespace SV20T1020078.Web.Controllers
         [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
         public IActionResult Save(Employee model ,string birthDateInput ="",IFormFile? uploadPhoto = null)  // viết tường minh :  int customerID , string custormerName ,....
         {
+            //Yêu cầu : Tên khách hàng , tên giao dịch ,Email và tỉnh thành không được để trống 
+            if (string.IsNullOrWhiteSpace(model.FullName))
+            {
+                ModelState.AddModelError(nameof(model.FullName), "Tên không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(model.Phone))
+            {
+                ModelState.AddModelError(nameof(model.Phone), "Tên điện thoại không được để trống");
+            }
+            if (string.IsNullOrWhiteSpace(model.Email))
+            {
+                ModelState.AddModelError(nameof(model.Email), "Email không được để trống");
+            }
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Title = model.EmployeeID == 0 ? "Bổ sung nhân viên" : "Cập nhật thông tin nhân viên";
+                return View("Edit", model);
+            }
+
+
+
+
             //xử lý ngày sinh
             DateTime? date = birthDateInput.ToDateTime(); // mở rộng chức năng cho giá trị kiểu chuỗi  => this s
             if(date.HasValue)
@@ -77,10 +130,22 @@ namespace SV20T1020078.Web.Controllers
             if (model.EmployeeID == 0)
             {
                 int id = CommonDataService.AddEmployee(model);
+                if (id <= 0)
+                {
+                    ModelState.AddModelError(nameof(model.Email), "Email bị trùng ");
+                    ViewBag.Title = "Bổ sung nhân viên";
+                    return View("Edit", model);
+                }
             }
             else
             {
                 bool result = CommonDataService.UpdateEmployee(model);
+                if (!result)
+                {
+                    ModelState.AddModelError("Error", "Không cập nhật được nhân viên . Có thể email bị trùng");
+                    ViewBag.Title = "Cập nhật nhân viên";
+                    return View("Edit", model);
+                }
             }
             return RedirectToAction("Index");
         }
