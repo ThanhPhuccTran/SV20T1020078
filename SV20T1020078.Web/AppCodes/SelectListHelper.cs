@@ -58,7 +58,7 @@ namespace SV20T1020078.Web
             List<SelectListItem> list = new List<SelectListItem>();
             list.Add(new SelectListItem()
             {
-                Value = "",
+                Value = "0",
                 Text = "-- Nhà cung cấp --",
 
             });

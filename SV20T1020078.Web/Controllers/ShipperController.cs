@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SV20T1020078.BusinessLayers;
 using SV20T1020078.DomainModels;
 using SV20T1020078.Web.Models;
 
 namespace SV20T1020078.Web.Controllers
 {
+    [Authorize(Roles = $"{WebUserRoles.Administrator},{WebUserRoles.Employee}")] //Có nghĩa khi truy cập Action Trong Controller , Kiểm tra xem đã đăng nhập , hay chưa đăng nhập
     public class ShipperController : Controller
     {
         const int PAGE_SIZE = 20;

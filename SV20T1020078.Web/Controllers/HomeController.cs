@@ -1,9 +1,11 @@
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SV20T1020078.Web.Models;
 using System.Diagnostics;
 
 namespace SV20T1020078.Web.Controllers
 {
+    [Authorize] //Có nghĩa khi truy cập Action Trong Controller , Kiểm tra xem đã đăng nhập , hay chưa đăng nhập
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

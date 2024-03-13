@@ -86,10 +86,14 @@ namespace SV20T1020078.DataLayers.SQLServer
 
             using (var connection = OpenConnection())
             {
-                var sql = @"
+                var sql = @"    if exists(select * from ProductPhotos where Photo = @Photo or DisplayOrder = @DisplayOrder)
+                                select -1
+                            else
+                                begin
                                     insert into ProductPhotos(ProductID,Photo,Description,DisplayOrder,IsHidden)
                                     values(@ProductID,@Photo,@Description,@DisplayOrder,@IsHidden);
-                                    
+                                     select @@identity;
+                                end
                                    ";
 
                 var parameters = new
