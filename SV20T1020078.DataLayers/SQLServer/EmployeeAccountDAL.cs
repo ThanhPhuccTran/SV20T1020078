@@ -2,6 +2,7 @@
 using SV20T1020078.DomainModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,6 +55,24 @@ namespace SV20T1020078.DataLayers.SQLServer
                 cn.Close();
             };
             return result;
+        }
+
+        public string? GetPassword(string userName)
+        {
+            string password = "";
+            using(var cn = OpenConnection())
+            {
+                var sql = @"Select Password from Employees Where Email = @email";
+                var parameters = new 
+                { 
+                    Email = userName,
+                
+                };
+                password = cn.QueryFirstOrDefault<string>(sql: sql, param: parameters, commandType: CommandType.Text);
+                cn.Close();
+
+            }
+            return password;
         }
     }
 }

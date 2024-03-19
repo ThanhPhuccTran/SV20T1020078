@@ -26,5 +26,9 @@ namespace SV20T1020078.BusinessLayers
             //TODO: Thay đổi mật khẩu của Employee
             return userAccountDB.ChangePassword(userName, oldPassword, newPassword);
         }
+        public static string? GetPassword(string userName)
+        {
+            return userAccountDB.GetPassword(userName);
+        }
     }
 }
