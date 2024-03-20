@@ -74,5 +74,49 @@ namespace SV20T1020078.Web
             }
             return list;
         }
+
+        public static List<SelectListItem> Shippers()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem()
+            {
+                Value = "0",
+                Text = "-- Chọn người giao hàng --",
+
+            });
+            foreach (var item in CommonDataService.ListOfShipperName())
+            {
+
+                list.Add(new SelectListItem()
+                {
+                    Value = item.ShipperID.ToString(),
+                    Text = item.ShipperName,
+
+                });
+            }
+            return list;
+        }
+        public static List<SelectListItem> Customers()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem()
+            {
+                Value = "0",
+                Text = "-- Chọn người giao hàng --",
+
+            });
+            foreach (var item in CommonDataService.ListOfCustomerName())
+            {
+
+                list.Add(new SelectListItem()
+                {
+                    Value = item.CustomerID.ToString(),
+                    Text = item.CustomerName,
+
+                });
+            }
+            return list;
+        }
+
     }
 }

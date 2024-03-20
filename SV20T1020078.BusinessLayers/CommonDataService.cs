@@ -389,5 +389,14 @@ namespace SV20T1020078.BusinessLayers
         {
             return supplierDB.List(1, 0, searchValue).ToList();
         }
+        public static List<Shipper> ListOfShipperName(string searchValue = "")
+        {
+            return shipperDB.List(1, 0, searchValue).ToList();
+        }
+
+        public static List<Customer> ListOfCustomerName(string searchValue = "")
+        {
+            return customerDB.List(1, 0,searchValue).ToList();
+        }
     }
 }

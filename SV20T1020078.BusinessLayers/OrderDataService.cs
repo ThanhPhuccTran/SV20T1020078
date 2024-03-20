@@ -203,7 +203,7 @@ namespace SV20T1020078.BusinessLayers
             Order? data = orderDB.Get(orderID);
             if (data == null)
                 return false;
-            if (data.Status == Constants.ORDER_INIT || data.Status == Constants.ORDER_ACCEPTED)
+            if (data.Status == Constants.ORDER_INIT || data.Status == Constants.ORDER_ACCEPTED || data.Status == Constants.ORDER_FINISHED)
             {
                 return orderDB.DeleteDetail(orderID, productID);
             }

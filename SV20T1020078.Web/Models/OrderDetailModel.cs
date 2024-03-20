@@ -2,7 +2,7 @@
 
 namespace SV20T1020078.Web.Models
 {
-    public class OrderDetailModel
+    public class OrderDetailModel: BasePaginationResult
     {
         public Order Order { get; set; }
         public List<OrderDetail> Details { get; set; }
