@@ -10,7 +10,7 @@ namespace SV20T1020078.Web.Controllers
     public class SupplierController : Controller
     {
         const int PAGE_SIZE = 20;
-        const string SUPPLIER_SEARCH = "customer_search";
+        const string SUPPLIER_SEARCH = "supplier_search";
         public IActionResult Index(int page = 1 , string searchValue = "")
         {
             Models.PaginationSearchInput? input = ApplicationContext.GetSessionData<PaginationSearchInput>(SUPPLIER_SEARCH);
@@ -48,7 +48,8 @@ namespace SV20T1020078.Web.Controllers
             ViewBag.Title = "Bổ sung nhà cung cấp";
             var model = new Supplier()
             {
-                SupplierID = 0
+                SupplierID = 0,
+                BirtDay = new DateTime(1990, 1, 1)
             };
             // dùng chung giao diện với Edit
             return View("Edit", model);
@@ -67,7 +68,7 @@ namespace SV20T1020078.Web.Controllers
             return View(model);
         }
         [HttpPost] //Attribute (chỉ nhận dữ liệu gửi lên dưới dạng là POST)
-        public IActionResult Save(Supplier model)  // viết tường minh :  int customerID , string custormerName ,....
+        public IActionResult Save(Supplier model, string BirthDate = "")  // viết tường minh :  int customerID , string custormerName ,....
         {
             if (string.IsNullOrWhiteSpace(model.SupplierName))
             {
@@ -90,6 +91,11 @@ namespace SV20T1020078.Web.Controllers
             {
                 ViewBag.Title = model.SupplierID == 0 ? "Bổ sung Nhà cung cấp" : "Cập nhật thông tin Nhà cung cấp";
                 return View("Edit", model);
+            }
+            DateTime? date = BirthDate.ToDateTime(); // mở rộng chức năng cho giá trị kiểu chuỗi  => this s
+            if (date.HasValue)
+            {
+                model.BirtDay = date.Value;
             }
             if (model.SupplierID == 0)
             {

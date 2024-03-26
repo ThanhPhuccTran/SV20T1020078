@@ -52,5 +52,8 @@ namespace SV20T1020078.DataLayers
         /// Xóa 1 mặt hàng ra khỏi đơn hàng
         /// </summary>
         bool DeleteDetail(int orderID, int productID);
+
+        public IList<OrderStatus> ListOfStatus(int page = 1, int pageSize = 0, string searchValue = "");
+        public bool UpdateAddress(Order data);
     }
 }

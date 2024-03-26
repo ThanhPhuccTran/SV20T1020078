@@ -162,7 +162,17 @@ namespace SV20T1020078.DataLayers.SQLServer
             }
             return data;
         }
-
+        public IList<OrderStatus> ListOfStatus(int page = 1, int pageSize = 0, string searchValue = "")
+        {
+            List<OrderStatus> list = new List<OrderStatus>();
+            using (var connection = OpenConnection())
+            {
+                var sql = @"select * from OrderStatus";
+                list = connection.Query<OrderStatus>(sql: sql, commandType: CommandType.Text).ToList();
+                connection.Close();
+            }
+            return list;
+        }
         public IList<Order> List(int page = 1, int pageSize = 0, int status = 0, DateTime? fromTime = null, DateTime? toTime = null, string searchValue = "")
         {
             List<Order> list = new List<Order>();
@@ -208,7 +218,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                 {
                     Page = page,
                     PageSize = pageSize,
-                    SearchValue = searchValue,
+                    SearchValue = searchValue??"",
                     Status = status,
                     FromTime = fromTime,
                     ToTime = toTime,
@@ -309,5 +319,30 @@ namespace SV20T1020078.DataLayers.SQLServer
             }
             return result;
         }
+
+        public bool UpdateAddress(Order data)
+        {
+            bool result = false;
+            using (var connection = OpenConnection())
+            {
+                var sql = @"
+                            UPDATE Orders 
+                            SET DeliveryProvince = @DeliveryProvince, 
+                                DeliveryAddress = @DeliveryAddress
+                            WHERE OrderID = @OrderID
+                            ";
+                var parameters = new
+                {
+                    DeliveryProvince = data.DeliveryProvince,
+                    DeliveryAddress = data.DeliveryAddress,
+                    OrderID = data.OrderID,
+                };
+
+                result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
+                connection.Close();
+            }
+            return result;
+        }
+
     }
 }

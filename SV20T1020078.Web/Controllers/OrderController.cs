@@ -7,10 +7,10 @@ using SV20T1020078.Web.Models;
 
 namespace SV20T1020078.Web.Controllers
 {
-   
 
 
-    [Authorize] //Có nghĩa khi truy cập Action Trong Controller , Kiểm tra xem đã đăng nhập , hay chưa đăng nhập
+
+    [Authorize(Roles = $"{WebUserRoles.Administrator},{WebUserRoles.Employee}")] //Có nghĩa khi truy cập Action Trong Controller , Kiểm tra xem đã đăng nhập , hay chưa đăng nhập
     public class OrderController : Controller
     {
         private const int ORDER_PAGE_SIZE = 20;
@@ -34,12 +34,18 @@ namespace SV20T1020078.Web.Controllers
                 };
                
             }
+            else
+            {
+                ApplicationContext.SetSessionData(ORDER_SEARCH, input);
+               
+            }
             return View(input);
         }  
         public IActionResult Search(OrderSearchInput input)
         {
             int rowCount = 0;
             var data = OrderDataService.ListOrders(out rowCount,input.Page,input.PageSize,input.Status,input.FromTime,input.ToTime,input.SearchValue??"");
+           
             var model = new OrderSearchResult
             {
                 Page = input.Page,
@@ -86,8 +92,6 @@ namespace SV20T1020078.Web.Controllers
                     Page = 1,
                     PageSize = PRODUCT_PAGE_SIZE,
                     SearchValue = ""
-
-                
                 };
 
 
@@ -201,7 +205,7 @@ namespace SV20T1020078.Web.Controllers
             return Json("");
         }
 
-        public IActionResult Init(int customerID = 0 , string deliveryProvince = "",string deliveryAddress = "")
+        public IActionResult Init(int customerID = 0 , string Province = "",string deliveryAddress = "")
         {
             var shoppingCart = GetShoppingCart();
             if(shoppingCart.Count == 0)
@@ -209,13 +213,13 @@ namespace SV20T1020078.Web.Controllers
                 TempData["Message"] = "Không thể tạo đơn hàng với giỏ hàng trống";
                 return RedirectToAction("Create");
             }
-            if(customerID<=0 || string.IsNullOrWhiteSpace(deliveryAddress) || string.IsNullOrWhiteSpace(deliveryProvince))
+            if(customerID<=0 || string.IsNullOrWhiteSpace(deliveryAddress) || string.IsNullOrWhiteSpace(Province))
             {
                 TempData["Message"] = "Vui lòng nhập đầy đủ thông tin";
                 return RedirectToAction("Create");
             }
             int employeeID = Convert.ToInt32(User.GetUserData()?.UserId);
-            int orderID = OrderDataService.InitOrder(employeeID, customerID, deliveryProvince, deliveryAddress, shoppingCart);
+            int orderID = OrderDataService.InitOrder(employeeID, customerID, Province, deliveryAddress, shoppingCart);
             ClearCart();
             return RedirectToAction("Details", new { id = orderID });
         }
@@ -228,17 +232,46 @@ namespace SV20T1020078.Web.Controllers
             var model = OrderDataService.GetOrderDetail(id, productID);
             return View(model);
         }
+        [HttpGet]
+        public IActionResult EditAddress(int id = 0)
+        {
+            var model = OrderDataService.GetOrder(id);
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult UpdateAddress(Order data)
+        {
+            if (Request.Method == "POST")
+            {
+                if (data.OrderID != 0)
+                {
+                    bool result = OrderDataService.UpdateAddress(data);
+                    if (!result)
+                    {
+                        return Json("Sửa địa chỉ không thành công");
+                    }
+                }
+
+            }
+            return Json("");
+        }
         [HttpPost]
         public IActionResult UpdateDetail(OrderDetail data)
         {
             Order od = OrderDataService.GetOrder(data.OrderID);
             ViewBag.KQ = od.Status;
-            if (Request.Method == "POST")
-            {   
-                OrderDataService.SaveOrderDetail(data.OrderID, data.ProductID, data.Quantity, data.SalePrice);
-                return RedirectToAction("Details", new { id = data.OrderID });
+            if (data.Quantity <= 0)
+            {
+                return Json("Vui lòng nhập số lượng > 0 ");
             }
-            return View("Details" , new {id= data.OrderID});
+            if(data.SalePrice <= 0)
+            {
+                return Json("Vui lòng nhập số tiền hợp lý ");
+            }
+            OrderDataService.SaveOrderDetail(data.OrderID, data.ProductID, data.Quantity, data.SalePrice);
+            return Json("");
+            
+           /* return View("Details" , new {id= data.OrderID});*/
         }
         public IActionResult DeleteDetail(int id = 0 , int productID = 0)
         {

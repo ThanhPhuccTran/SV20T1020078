@@ -6,7 +6,7 @@ using SV20T1020078.Web.Models;
 
 namespace SV20T1020078.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = $"{WebUserRoles.Administrator},{WebUserRoles.Employee}")]
     public class ProductController : Controller
     {
         const int PAGE_SIZE = 20;
@@ -28,7 +28,7 @@ namespace SV20T1020078.Web.Controllers
             Models.ProductSearchInput? input = ApplicationContext.GetSessionData<ProductSearchInput>(PRODUCT_SEARCH);
             if (input == null)
             {
-                input = new ProductSearchInput
+                input = new ProductSearchInput()
                 {
                     Page = 1,
                     PageSize = PAGE_SIZE,
@@ -103,6 +103,10 @@ namespace SV20T1020078.Web.Controllers
             if (model.SupplierID.ToString() == "0")
             {
                 ModelState.AddModelError(nameof(model.SupplierID), "Nhà cung cấp không được để trống");
+            }
+            if(model.Price < 1)
+            {
+                ModelState.AddModelError(nameof(model.Price), "Giá phải > 0 ");
             }
             List<Product> list
                 = ProductDataService.ListProducts("");
@@ -214,7 +218,7 @@ namespace SV20T1020078.Web.Controllers
                 long id = ProductDataService.AddPhoto(model);
                 if (id <= 0)
                 {
-                    ModelState.AddModelError(nameof(model.Photo), "Ảnh bị trùng ");
+                   /* ModelState.AddModelError(nameof(model.Photo), "Ảnh bị trùng ");*/
                     ModelState.AddModelError(nameof(model.DisplayOrder), "Thứ tự hiển thị đã có ");
                     ViewBag.Title = "Bổ sung ảnh cho mặt hàng";
                     return View("Photo", model);

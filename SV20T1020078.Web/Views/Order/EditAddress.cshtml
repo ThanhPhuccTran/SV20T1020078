@@ -1,30 +1,31 @@
-﻿@model SV20T1020078.Web.Models.OrderDetailModel
+﻿@model SV20T1020078.DomainModels.Order
+
 @{
     Layout = null;
 }
 
 <div class="modal-dialog">
     <div class="modal-content">
-        <form id="formShipping" action="~/Order/Shipping/@ViewBag.OrderID" method="post">
+        <form id="formShipping" action="~/Order/UpdateAddress" method="post" class="form-horizontal">
             <div class="modal-header bg-primary">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Chuyển giao hàng cho đơn hàng</h4>
+                <h4 class="modal-title">Cập nhật địa chỉ đơn hàng</h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="control-label">Người giao hàng:</label>
-                    @* <select class="form-control" name="shipperID">
-                    <option value="0">-- Chọn người giao hàng ---</option>
-                    <option value="1">Giao hàng Tiết kiệm</option>
-                    <option value="2">Tín Thành</option>
-                    <option value="3">Viettel Express</option>
-                    </select> *@
-                    @Html.DropDownListFor(m => m.shipperID, SelectListHelper.Shippers(), new { @class = "form-control" })
 
+                    <input type="hidden" name="OrderID" value="@Model.OrderID" />
+                    @* <p>@Model.OrderID</p> *@
+                    <label class="control-label col-sm-3">Địa chỉ giao hàng:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" value="@Model.DeliveryAddress" name="DeliveryAddress" autofocus>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-offset-3 col-sm-9">
-                        <span id="message" style="color: #f00"></span>
+                    <label class="control-label col-sm-3">Tỉnh/Thành:</label>
+                    <div class="col-sm-9">
+                        @Html.DropDownListFor(m => m.DeliveryProvince, SelectListHelper.Pronvinces(), new { @class = "form-control" })
+                        @Html.ValidationMessage(nameof(Model.DeliveryProvince), new { @style = "color:#f00" })
                     </div>
                 </div>
             </div>
@@ -39,6 +40,8 @@
         </form>
     </div>
 </div>
+
+
 <script>
     $(document).ready(function () {
         $('#formShipping').submit(function (e) {
@@ -67,3 +70,4 @@
         });
     });
 </script>
+

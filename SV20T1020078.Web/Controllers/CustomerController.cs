@@ -42,7 +42,7 @@ namespace SV20T1020078.Web.Controllers
             //Kiểm tra xem trong session có luuwa điều kiện tìm kiếm không.
             //Nếu có thì t=sử dụng lại điều kiện tìm kiếm , ngược lại thì tìm kiếm theo điều kiện mặc định
 
-            Models.PaginationSearchInput? input = ApplicationContext.GetSessionData<PaginationSearchInput>(CUSTOMER_SEARCH);
+            Models.PaginationSearchInput input = ApplicationContext.GetSessionData<PaginationSearchInput>(CUSTOMER_SEARCH);
             if(input == null)
             {
                 input = new PaginationSearchInput

@@ -49,7 +49,8 @@ namespace SV20T1020078.BusinessLayers
                 EmployeeID = employeeID,
                 CustomerID = customerID,
                 DeliveryProvince = deliveryProvince,
-                DeliveryAddress = deliveryAddress
+                DeliveryAddress = deliveryAddress,
+                Status = Constants.ORDER_INIT
             };
             int orderID = orderDB.Add(data);
             if (orderID > 0)
@@ -188,7 +189,7 @@ namespace SV20T1020078.BusinessLayers
             Order? data = orderDB.Get(orderID);
             if (data == null)
                 return false;
-            if (data.Status == Constants.ORDER_INIT || data.Status == Constants.ORDER_ACCEPTED || data.Status == Constants.ORDER_FINISHED)
+            if (data.Status == Constants.ORDER_INIT || data.Status == Constants.ORDER_ACCEPTED )
             {
                 return orderDB.SaveDetail(orderID, productID, quantity, salePrice);
             }
@@ -203,11 +204,22 @@ namespace SV20T1020078.BusinessLayers
             Order? data = orderDB.Get(orderID);
             if (data == null)
                 return false;
-            if (data.Status == Constants.ORDER_INIT || data.Status == Constants.ORDER_ACCEPTED || data.Status == Constants.ORDER_FINISHED)
+            if (data.Status == Constants.ORDER_INIT || data.Status == Constants.ORDER_ACCEPTED )
             {
                 return orderDB.DeleteDetail(orderID, productID);
             }
             return false;
+        }
+
+
+        public static List<OrderStatus> ListOfStatusName(string searchValue = "")
+        {
+            return orderDB.ListOfStatus(1,0,searchValue).ToList();
+        }
+
+        public static bool UpdateAddress(Order data)
+        {
+            return orderDB.UpdateAddress(data);
         }
     }
 }

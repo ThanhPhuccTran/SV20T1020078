@@ -15,6 +15,7 @@
             <div class="form-group">
                 <label for="pwd">Điện thoại:</label>
                 <input type="text" class="form-control" name="@nameof(Model.Phone)" value="@Model.Phone">
+                @Html.ValidationMessageFor(m => m.Phone, "", new { @style = "color:#f00" })
             </div>
             <div class=" form-group" style="padding-top:20px">
                 <button type="submit" class="btn btn-primary">

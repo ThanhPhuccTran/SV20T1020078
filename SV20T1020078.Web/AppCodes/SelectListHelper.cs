@@ -80,7 +80,7 @@ namespace SV20T1020078.Web
             List<SelectListItem> list = new List<SelectListItem>();
             list.Add(new SelectListItem()
             {
-                Value = "0",
+                Value = "-1",
                 Text = "-- Chọn người giao hàng --",
 
             });
@@ -96,7 +96,7 @@ namespace SV20T1020078.Web
             }
             return list;
         }
-        public static List<SelectListItem> Customers()
+        public static List<SelectListItem> CustomersName()
         {
             List<SelectListItem> list = new List<SelectListItem>();
             list.Add(new SelectListItem()
@@ -116,6 +116,51 @@ namespace SV20T1020078.Web
                 });
             }
             return list;
+        }
+
+        public static List<SelectListItem> CustomerProvince()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem()
+            {
+                Value = "0",
+                Text = "-- Chọn người giao hàng --",
+
+            });
+            foreach (var item in CommonDataService.ListOfCustomerName())
+            {
+
+                list.Add(new SelectListItem()
+                {
+                    Value = item.CustomerID.ToString(),
+                    Text = item.Province,
+
+                });
+            }
+            return list;
+        }
+
+        public static List<SelectListItem> Status()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            list.Add(new SelectListItem()
+            {
+                Value = "",
+                Text = "-- Trạng thái --",
+
+            });
+            foreach (var item in OrderDataService.ListOfStatusName())
+            {
+
+                list.Add(new SelectListItem()
+                {
+                    Value = item.Status.ToString(),
+                    Text = item.Description,
+
+                });
+            }
+            return list;
+
         }
 
     }

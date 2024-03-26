@@ -86,7 +86,7 @@ namespace SV20T1020078.Web.Controllers
             }
             if (string.IsNullOrWhiteSpace(model.Phone))
             {
-                ModelState.AddModelError(nameof(model.Phone), "Tên không được để trống");
+                ModelState.AddModelError(nameof(model.Phone), "Số điện thoại không được để trống");
             }
 
             if (!ModelState.IsValid)

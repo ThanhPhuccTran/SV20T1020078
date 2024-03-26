@@ -4,7 +4,8 @@
 }
 
 <!-- Hiển thị kết quả tìm kiếm -->
-<div>
+@if(Model.RowCount > 0)
+{
     <p style="margin: 10px 0 10px 0">
         Có <strong>@Model.RowCount</strong> khách hàng trong số <strong>@Model.PageCount</strong> trang
     </p>
@@ -70,4 +71,18 @@
             </ul>
         </div>
     }
-</div>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-center align-items-center vh-100 text-center">
+                    <p style="margin-top: 20px"> Không tìm thấy kết quả </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+}

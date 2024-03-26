@@ -26,8 +26,8 @@ namespace SV20T1020078.DataLayers.SQLServer
                                 select -1
                             else
                                 begin
-                                    insert into Suppliers(SupplierName,ContactName,Province,Address,Phone,Email)
-                                    values(@SupplierName,@ContactName,@Province,@Address,@Phone,@Email);
+                                    insert into Suppliers(SupplierName,ContactName,Province,Address,Phone,Email,BirtDay)
+                                    values(@SupplierName,@ContactName,@Province,@Address,@Phone,@Email,@BirtDay);
 
                                     select @@identity;
                                 end";
@@ -40,6 +40,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
+                    BirtDay = data.BirtDay
                 };
                 id = connection.ExecuteScalar<int>(sql: sql, param: parameters, commandType: CommandType.Text);
                 connection.Close();
@@ -170,7 +171,8 @@ namespace SV20T1020078.DataLayers.SQLServer
                                         Province = @Province,
                                         Address = @address,
                                         Phone = @phone,
-                                        Email = @email
+                                        Email = @email,
+                                        BirtDay = @BirtDay
                                         where SupplierID = @supplierID
                                end";
 
@@ -183,6 +185,7 @@ namespace SV20T1020078.DataLayers.SQLServer
                     Address = data.Address ?? "",
                     Phone = data.Phone ?? "",
                     Email = data.Email ?? "",
+                    BirtDay = data.BirtDay
                 };
                 result = connection.Execute(sql: sql, param: parameters, commandType: CommandType.Text) > 0;
                 connection.Close();

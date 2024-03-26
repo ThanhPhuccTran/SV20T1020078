@@ -8,7 +8,7 @@ using System.Buffers;
 
 namespace SV20T1020078.Web.Controllers
 {
-    [Authorize] //Có nghĩa khi truy cập Action Trong Controller , Kiểm tra xem đã đăng nhập , hay chưa đăng nhập
+    [Authorize(Roles = $"{WebUserRoles.Administrator}")]//Có nghĩa khi truy cập Action Trong Controller , Kiểm tra xem đã đăng nhập , hay chưa đăng nhập
     public class EmployeeController : Controller
     {
         const int PAGE_SIZE = 20;
